@@ -1,4 +1,4 @@
-use std::io::Read;
+use std::{io::Read, error::Error};
 
 const SCHEMAS_FOLDER: &'static str = "./tests/schemas/";
 
@@ -13,7 +13,7 @@ fn get_raw_schema(name: &str) -> String {
         .read(true)
         .open(&filepath)
         .expect(&format!("Raw schema file not found! {filepath}"));
-    
+
     let mut raw_schema = String::default();
     file.read_to_string(&mut raw_schema).expect("Failed to read file!");
     raw_schema
@@ -49,6 +49,22 @@ fn check_integrity_of_schemas() -> Result<(), serde_json::Error> {
 
     let message_schema = get_raw_schema("messages_get_by_id.json");
     let _msg: super::schemas::Message = serde_json::from_str(&message_schema)?;
+
+    Ok(())
+}
+
+#[test]
+fn check_functions() -> Result<(), Box<dyn Error>> {
+    use tokio;
+    use super::functions;
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()?;
+    
+    let handle = rt.spawn(functions::get_domains());
+    let domains = rt.block_on(handle)??;
+
+    
 
     Ok(())
 }
