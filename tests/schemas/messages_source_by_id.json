@@ -1,0 +1,8 @@
+{
+    "@context": "string",
+    "@id": "string",
+    "@type": "string",
+    "id": "string",
+    "downloadUrl": "string",
+    "data": "string"
+}

@@ -1,0 +1,53 @@
+{
+    "hydra:member": [
+        {
+            "@id": "string",
+            "@type": "string",
+            "@context": "string",
+            "id": "string",
+            "accountId": "string",
+            "msgid": "string",
+            "from": {
+                "name": "string",
+                "address": "string"
+            },
+            "to": [
+                {
+                    "name": "string",
+                    "address": "string"
+                }
+            ],
+            "subject": "string",
+            "intro": "string",
+            "seen": true,
+            "isDeleted": true,
+            "hasAttachments": true,
+            "size": 0,
+            "downloadUrl": "string",
+            "createdAt": "2022-04-01T00:00:00.000Z",
+            "updatedAt": "2022-04-01T00:00:00.000Z"
+        }
+    ],
+    "hydra:totalItems": 0,
+    "hydra:view": {
+        "@id": "string",
+        "@type": "string",
+        "hydra:first": "string",
+        "hydra:last": "string",
+        "hydra:previous": "string",
+        "hydra:next": "string"
+    },
+    "hydra:search": {
+        "@type": "string",
+        "hydra:template": "string",
+        "hydra:variableRepresentation": "string",
+        "hydra:mapping": [
+            {
+                "@type": "string",
+                "variable": "string",
+                "property": "string",
+                "required": true
+            }
+        ]
+    }
+}

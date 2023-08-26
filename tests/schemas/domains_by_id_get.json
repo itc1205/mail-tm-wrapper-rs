@@ -1,0 +1,11 @@
+{
+    "@id": "string",
+    "@type": "string",
+    "@context": "string",
+    "id": "string",
+    "domain": "string",
+    "isActive": true,
+    "isPrivate": true,
+    "createdAt": "2022-04-01T00:00:00.000Z",
+    "updatedAt": "2022-04-01T00:00:00.000Z"
+}
