@@ -1,11 +1,10 @@
-use std::{io::Read, error::Error};
+use std::{error::Error, io::Read};
 
 const SCHEMAS_FOLDER: &'static str = "./tests/schemas/";
 
-
 fn get_raw_schema(name: &str) -> String {
     use std::fs::OpenOptions;
-    
+
     let mut filepath = SCHEMAS_FOLDER.to_owned();
     filepath.push_str(name);
 
@@ -15,27 +14,27 @@ fn get_raw_schema(name: &str) -> String {
         .expect(&format!("Raw schema file not found! {filepath}"));
 
     let mut raw_schema = String::default();
-    file.read_to_string(&mut raw_schema).expect("Failed to read file!");
+    file.read_to_string(&mut raw_schema)
+        .expect("Failed to read file!");
     raw_schema
 }
 
 /// This test will check integrity of schemas.
-/// 
+///
 /// Please not that if in future you are going to add new schema
 /// then you'll probably need to add tests for it here
-/// 
+///
 /// And dont forget to add your new schema to the schemas if needed!
 
 #[test]
 fn check_integrity_of_schemas() -> Result<(), serde_json::Error> {
-    
     // The test is pretty straightforward, just get the raw schema and try to encode it!
     // If any of errors will occur, then we'll just fail
 
     let token_schema = get_raw_schema("token.json");
     let _token: super::schemas::Token = serde_json::from_str(&token_schema)?;
 
-    let domain_schema = get_raw_schema( "domains_by_id_get.json");
+    let domain_schema = get_raw_schema("domains_by_id_get.json");
     let _domain: super::schemas::Domain = serde_json::from_str(&domain_schema)?;
 
     let domains_schema = get_raw_schema("domains_get.json");
@@ -55,8 +54,8 @@ fn check_integrity_of_schemas() -> Result<(), serde_json::Error> {
 
 #[test]
 fn check_functions() -> Result<(), Box<dyn Error>> {
-    use tokio;
     use super::functions;
+    use tokio;
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()?;
@@ -64,7 +63,15 @@ fn check_functions() -> Result<(), Box<dyn Error>> {
     let handle = rt.spawn(functions::get_domains());
     let domains = rt.block_on(handle)??;
 
+    let email = "fhdufhdsfhs13138124@".to_string() + &domains[0].to_string();
+    let password = "32819032189031283".to_string();
     
+    let handle = rt.spawn(functions::create_account(email.clone(), password.clone()));
+    rt.block_on(handle)??;
 
+    let handle = rt.spawn(functions::delete_account(email.clone(), password.clone()));
+    rt.block_on(handle)??;
+
+    
     Ok(())
 }

@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+use std::{ops::{Index, IndexMut}, fmt};
+
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Token {
@@ -28,11 +30,22 @@ pub(crate) struct Domain {
     #[serde(rename = "isPrivate")]
     is_private: bool, // TODO - DateTime things because im dumb!
 }
+impl fmt::Display for Domain {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.domain)
+    }
+}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct ListOfDomains {
     #[serde(rename = "hydra:member")]
     domains: Vec<Domain>,
+}
+impl Index<usize> for ListOfDomains {
+    type Output = Domain;
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.domains[index]
+    }
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -40,6 +53,7 @@ pub(crate) struct ListOfMessages {
     #[serde(rename = "hydra:member")]
     messages: Vec<MessageShortened>,
 }
+
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Addresant {
@@ -107,4 +121,10 @@ pub(crate) struct Attachment {
     size: u64,
     #[serde(rename = "downloadUrl")]
     download_url: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub(crate) struct UserPost {
+    pub(crate) address: String, 
+    pub(crate) password: String
 }

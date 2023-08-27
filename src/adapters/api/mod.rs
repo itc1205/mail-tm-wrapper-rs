@@ -7,6 +7,8 @@ pub(crate) mod schemas;
 pub(crate) mod errors;
 
 /// All mail-tm API wrappers
+/// 
+/// Those will usually return structs from crate::adapters::api::schemas
 pub(crate) mod functions;
 
 #[cfg(test)]

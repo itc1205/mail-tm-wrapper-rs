@@ -158,8 +158,8 @@ Creates an Account resource (Registration)
 
 Body
 
-Name	Type	Description
-address	string	Account's address. Example: user@example.com
+Name	    Type	  Description
+address	  string	Account's address. Example: user@example.com
 password	string	Account's password.
 Params
 
