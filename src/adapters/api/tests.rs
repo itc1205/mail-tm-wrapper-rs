@@ -56,22 +56,44 @@ fn check_integrity_of_schemas() -> Result<(), serde_json::Error> {
 fn check_functions() -> Result<(), Box<dyn Error>> {
     use super::functions;
     use tokio;
+
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()?;
-    
+
     let handle = rt.spawn(functions::get_domains());
     let domains = rt.block_on(handle)??;
 
-    let email = "fhdufhdsfhs13138124@".to_string() + &domains[0].to_string();
+
+    let email = "rusty_tm_6@".to_string() + &domains[0].to_string();
     let password = "32819032189031283".to_string();
-    
+
+
     let handle = rt.spawn(functions::create_account(email.clone(), password.clone()));
-    rt.block_on(handle)??;
+    let account = rt.block_on(handle)??;
 
-    let handle = rt.spawn(functions::delete_account(email.clone(), password.clone()));
+
+
+    let handle = rt.spawn(functions::get_token(email.clone(), password.clone()));
+    let token = rt.block_on(handle)??;
+
+
+
+    let handle = rt.spawn(functions::get_user_from_token(token.token.clone()));
+    let retrieved_account = rt.block_on(handle)??;
+
+
+
+    assert!(account.id == retrieved_account.id, "Accounts missmatch");
+    
+    let handle = rt.spawn(functions::get_messages(token.token.clone()));
     rt.block_on(handle)??;
 
     
+
+    let handle = rt.spawn(functions::delete_account(account.id, token.token.clone()));
+    rt.block_on(handle)??;
+
+
     Ok(())
 }

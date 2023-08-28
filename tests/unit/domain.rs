@@ -9,10 +9,10 @@ fn check_struct_integrity() {
     {
         // Asserting our user by explicitly typed values
         // So we dont have to worry about wrong typing in future
-        let password_field: Option<String> = None;
-        let token_field: Option<String> = None;
-        let email_field: Option<String> = None;
-        let letters_field: Vec<structs::Letter> = vec![];
+        let password_field: String = String::default();
+        let token_field: String = String::default();
+        let email_field: String = String::default();
+        let letters_field: Vec<structs::LetterShort> = vec![];
 
         assert!(user.password == password_field, "Password field changed!");
         assert!(user.token == token_field, "Token field changed!");

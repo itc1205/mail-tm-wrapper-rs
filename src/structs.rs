@@ -1,16 +1,26 @@
-#[derive(PartialEq, Eq, Default)]
+
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct Addresant {
     pub name: String,
     pub address: String,
 }
 
-#[derive(PartialEq, Eq, Default)]
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct Attachment {
     pub filename: String,
     pub download_url: String,
 }
 
-#[derive(PartialEq, Eq, Default)]
+#[derive(Default, Debug, Clone, PartialEq)]
+pub struct LetterShort {
+    pub(crate) id: String,
+    pub from: Addresant,
+    pub to: Vec<Addresant>,
+    pub has_attachments: bool,
+    pub download_url: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct Letter {
     pub from: Addresant,
     pub to: Addresant,
@@ -20,10 +30,11 @@ pub struct Letter {
     pub download_url: String,
 }
 
-#[derive(PartialEq, Eq, Default)]
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct User {
-    pub email: Option<String>,
-    pub password: Option<String>,
-    pub token: Option<String>,
-    pub letters: Vec<Letter>,
+    pub(crate) id: String,
+    pub email: String,
+    pub password: String,
+    pub token: String,
+    pub letters: Vec<LetterShort>,
 }

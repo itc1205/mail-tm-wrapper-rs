@@ -1,16 +1,18 @@
 use serde::{Deserialize, Serialize};
-use std::{ops::{Index, IndexMut}, fmt};
-
+use std::{
+    fmt,
+    ops::{Index, IndexMut},
+};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Token {
-    id: String,
-    token: String,
+    pub(crate) id: String,
+    pub(crate) token: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Account {
-    id: String,
+    pub(crate) id: String,
     address: String,
     quota: u32,
     used: u32,
@@ -53,12 +55,36 @@ pub(crate) struct ListOfMessages {
     #[serde(rename = "hydra:member")]
     messages: Vec<MessageShortened>,
 }
+impl Into<Vec<crate::structs::LetterShort>> for ListOfMessages {
+    fn into(self) -> Vec<crate::structs::LetterShort> {
+        let mut letters = vec![];
+        for message in self.messages {
+            let letter = crate::structs::LetterShort{
+                id: message.id,
+                from: message.from.into(),
+                to: message.to.into_iter().map(|addresant| {addresant.into()}).collect(),
+                has_attachments: message.has_attachments,
+                download_url: message.download_url
+            };
+            letters.push(letter);
+        }
+        letters
+    }
+}
 
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Addresant {
     name: String,
     address: String,
+}
+impl Into<crate::structs::Addresant> for Addresant {
+    fn into(self) -> crate::structs::Addresant {
+        crate::structs::Addresant{
+            name: self.name,
+            address: self.address
+        }
+    }
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -108,6 +134,19 @@ pub(crate) struct Message {
     #[serde(rename = "downloadUrl")]
     download_url: String,
 }
+impl Into<crate::structs::Letter> for Message {
+    fn into(self) -> crate::structs::Letter {
+        crate::structs::Letter {
+            from: self.from.into(),
+            to: self.to[0].clone().into(),
+            text: self.text,
+            html: self.html[0].clone().into(),
+            download_url: self.download_url,
+            attachments: vec![], // TODO: Fix implemintation
+        }
+    }
+}
+
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Attachment {
     id: String,
@@ -125,6 +164,7 @@ pub(crate) struct Attachment {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct UserPost {
-    pub(crate) address: String, 
-    pub(crate) password: String
+    pub(crate) address: String,
+    pub(crate) password: String,
 }
+
